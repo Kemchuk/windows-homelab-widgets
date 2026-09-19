@@ -171,6 +171,17 @@ five seconds and a half-copied CSV that looks complete is worse than none.
 Cuts with no CSV left are reported and skipped rather than treated as errors;
 most of a 180-day window is usually older than the recorder.
 
+If something already has the classifier's output — a dashboard poller, say —
+hand it over with `-CutsJson` instead of letting the script run the
+classifier again:
+
+```powershell
+.\promote-cut-evidence.ps1 -Dest 'D:\backed-up\flightrec-crashes' -CutsJson .\cuts.json
+```
+
+That scan walks every rotated setupapi log, so it is not something to repeat
+on a fifteen-minute loop. A scheduled task can ignore the flag entirely.
+
 **Point `-Dest` at something your backups actually reach.** That is the whole
 purpose and the easiest part to get wrong — a keep-forever folder that no
 backup job visits just moves the problem somewhere you will not think to look.

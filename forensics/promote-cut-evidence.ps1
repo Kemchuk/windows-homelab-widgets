@@ -29,7 +29,13 @@ param(
 
     [string]$Classifier = 'C:\flightrec\classify-cuts.ps1',
 
-    # How far back to look for cuts.
+    # Path to a file holding classify-cuts.ps1 output already computed. Skips
+    # invoking the classifier, which scans every rotated setupapi log and is
+    # not something to repeat when the caller just did it. A long-running
+    # poller should pass this; a scheduled task should not bother.
+    [string]$CutsJson,
+
+    # How far back to look for cuts. Ignored when -CutsJson is given.
     [int]$Days = 180,
 
     # A day file is ~1.3MB. Anything near this is a runaway, not evidence.
@@ -38,10 +44,15 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-if (-not (Test-Path $Classifier)) { throw "Classifier not found: $Classifier" }
 if (-not (Test-Path $Dest)) { New-Item -ItemType Directory -Path $Dest -Force | Out-Null }
 
-$cl = & $Classifier -Days $Days | ConvertFrom-Json
+if ($CutsJson) {
+    if (-not (Test-Path $CutsJson)) { throw "CutsJson not found: $CutsJson" }
+    $cl = Get-Content -LiteralPath $CutsJson -Raw | ConvertFrom-Json
+} else {
+    if (-not (Test-Path $Classifier)) { throw "Classifier not found: $Classifier" }
+    $cl = & $Classifier -Days $Days | ConvertFrom-Json
+}
 $promoted = 0
 $skipped = 0
 
