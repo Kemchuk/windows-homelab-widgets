@@ -6,7 +6,8 @@ diagnosing hard power-offs that leave no bugcheck.
 
 Most self-hosting tooling assumes Linux. These run on a Windows host and get at
 the things Linux-first tools simply cannot see: Docker Desktop's own version,
-per-process CPU via PDH, Technitium's DHCP scope, LibreHardwareMonitor sensors,
+per-process CPU without paying for a handle per process, Technitium's DHCP
+scope, LibreHardwareMonitor sensors,
 and Windows' own crash logs.
 
 Everything here runs in production on a single Windows 10 box hosting ~65
@@ -42,7 +43,7 @@ localhost endpoint polled every 30 seconds.
 | `kometa` | 9994 | Last Kometa run, parsed out of its log |
 | `recyclarr` | 9993 | Last Recyclarr sync |
 | `technitium-dhcp` | 9996 | Real DHCP scope use and lease counts from Technitium |
-| `top-processes` | 9999 | Top 5 processes by CPU, via PDH counters |
+| `top-processes` | 9999 | Top 5 processes by CPU, via a WMI performance counter (25x faster than `psutil` here) |
 | `traefik-metrics` | 9995 | Traefik's Prometheus metrics, flattened |
 
 `loop.ps1` is the supervisor: a 20-line keep-alive that restarts a service if it
