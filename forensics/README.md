@@ -149,6 +149,32 @@ yesterday's file. Roughly 2.5MB per cut, kept permanently.
 Write the verdict alongside the CSV. Raw samples never say why they mattered,
 and the evidence has to still read on its own years later with no tooling.
 
+`promote-cut-evidence.ps1` does this. It asks `classify-cuts.ps1` for every
+cut, copies the boot day's CSV and the day before it into a per-cut folder,
+and drops the classifier's verdict beside them as `cut.json`:
+
+```powershell
+.\promote-cut-evidence.ps1 -Dest 'D:\backed-up\flightrec-crashes'
+```
+
+```
+flightrec-crashes/
+  2026-09-16_171249/
+    cut.json
+    flight_20260915.csv
+    flight_20260916.csv
+```
+
+Idempotent by size, so run it on a schedule — daily is plenty. It copies to
+`.part` and renames, because the recorder is appending to the source every
+five seconds and a half-copied CSV that looks complete is worse than none.
+Cuts with no CSV left are reported and skipped rather than treated as errors;
+most of a 180-day window is usually older than the recorder.
+
+**Point `-Dest` at something your backups actually reach.** That is the whole
+purpose and the easiest part to get wrong — a keep-forever folder that no
+backup job visits just moves the problem somewhere you will not think to look.
+
 ## Running these
 
 PowerShell 5.1, the version that ships with Windows. No `&&`, no ternaries, no

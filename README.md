@@ -62,6 +62,9 @@ it also stopped.
   Kernel-Power 41 and calling the total "crashes" over-reports badly; a driver
   install that dies mid-write looks identical to a hardware fault unless you
   check for it.
+- `promote-cut-evidence.ps1` — copies the CSVs covering a real cut somewhere
+  permanent, because the recorder deletes its own day files after 30 days and
+  the one file documenting a crash is otherwise on a timer.
 - `recorder-review.example.ps1` — a worked example of turning the above into a
   scheduled verdict notification.
 
