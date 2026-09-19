@@ -1,0 +1,29 @@
+# Never commit anything that carries a credential or a host's identity.
+*.env
+.env*
+secrets*
+*token*
+*credential*
+config.local.*
+
+# Recorder output: sample data from a real machine, and large.
+flight_*.csv
+*.pem
+*.der
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Local backups — this repo's own convention is *.bak-YYYY-MM-DD-<shortname>
+*.bak-*
+*.bak
+*.part
